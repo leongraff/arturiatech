@@ -1,5 +1,19 @@
+<script setup>
+import SingleComp from '@/components/SingleComp.vue'
+</script>
 <template>
-  <div><h1>hello</h1></div>
+  <div class="prod-container">
+    <SingleComp />
+  </div>
 </template>
-<script></script>
-<style scoped></style>
+
+<style scoped>
+.prod-container {
+  background-color: rgb(172, 154, 154);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 25px 65px 25px 65px;
+}
+</style>
