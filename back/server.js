@@ -1,7 +1,7 @@
 const http = require("http");
 const sqlite3 = require("sqlite3").verbose();
 
-const db = new sqlite3.Database("produtos.db", (err) => {
+const db = new sqlite3.Database("database.db", (err) => {
   if (err) {
     console.log(err);
   } else {
@@ -26,17 +26,59 @@ const db = new sqlite3.Database("produtos.db", (err) => {
 //   }
 // );
 
-const pesquisa = (callback) => {
+const buscarProdutos = (callback) => {
   db.all("SELECT * FROM Produtos", (err, rows) => {
     if (err) {
       console.log(err);
+      callback([]);
     } else {
-      const produtosComImagemBase64 = rows.map((row) => {
+      const produtos = rows.map((row) => {
         const imagemBase64 = Buffer.from(row.ProdImagem).toString("base64");
         return { ...row, ProdImagem: `data:image/jpeg;base64,${imagemBase64}` };
       });
-      callback(produtosComImagemBase64);
+      callback(produtos);
     }
+  });
+};
+
+const buscarPedidos = (callback) => {
+  db.all("SELECT * FROM Pedidos", (err, rows) => {
+    if (err) {
+      console.log(err);
+      callback([]);
+    } else {
+      callback(rows);
+    }
+  });
+};
+
+const buscarItensPedido = (callback) => {
+  db.all("SELECT * FROM ItensPedido", (err, rows) => {
+    if (err) {
+      console.log(err);
+      callback([]);
+    } else {
+      callback(rows);
+    }
+  });
+};
+
+const pesquisa = (callback) => {
+  const resultado = {};
+
+  buscarProdutos((produtos) => {
+    resultado.produtos = produtos;
+
+    buscarPedidos((pedidos) => {
+      resultado.pedidos = pedidos;
+
+      buscarItensPedido((itensPedido) => {
+        resultado.itensPedido = itensPedido;
+
+        // Chamar a função de retorno de chamada com o resultado completo
+        callback(resultado);
+      });
+    });
   });
 };
 
