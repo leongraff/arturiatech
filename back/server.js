@@ -74,8 +74,6 @@ const pesquisa = (callback) => {
 
       buscarItensPedido((itensPedido) => {
         resultado.itensPedido = itensPedido;
-
-        // Chamar a função de retorno de chamada com o resultado completo
         callback(resultado);
       });
     });
